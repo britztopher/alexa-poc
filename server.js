@@ -8,6 +8,8 @@ var express   = require('express'),
     applicationId: process.env.ALEXA_APP_ID || "HelloWorld"
   });
 
+console.log("Started listening on", port)
+
 /**
  * Handles Alexa launch request
  */ 
