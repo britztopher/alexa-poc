@@ -1,0 +1,16 @@
+{
+  "name": "alexa-mm-poc",
+  "version": "1.0.0",
+  "description": "Alexa Money Movement Proof of Concept Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "alexa",
+    "moneymovement",
+    "poc"
+  ],
+  "author": "",
+  "license": "ISC"
+}
