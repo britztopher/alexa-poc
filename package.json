@@ -4,7 +4,6 @@
   "description": "Alexa Money Movement Proof of Concept Service",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
   },
   "keywords": [
     "alexa",
