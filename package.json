@@ -12,5 +12,9 @@
     "poc"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "alexa-skill": "^0.1.1",
+    "express": "^4.13.4"
+  }
 }
