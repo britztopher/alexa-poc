@@ -7,7 +7,10 @@ var express   = require('express'),
     route: "/",
     applicationId: process.env.ALEXA_APP_ID || "HelloWorld"
   });
- 
+
+/**
+ * Handles Alexa launch request
+ */ 
 alexa.launch(function(req, res) {
   var phrase = "Welcome to my app!";
   var options = {
@@ -19,6 +22,9 @@ alexa.launch(function(req, res) {
   alexa.send(req, res, options);
 });
  
+/**
+ * Define an Alexa intent handler
+ */
 alexa.intent('Hello', function(req, res, slots) {
  
   console.log(slots);
@@ -33,6 +39,9 @@ alexa.intent('Hello', function(req, res, slots) {
   alexa.send(req, res, options);
 });
  
+/**
+ * Handles Alexa session termination requests
+ */
 alexa.ended(function(req, res, reason) {
   console.log(reason);
 });
