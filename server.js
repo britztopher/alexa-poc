@@ -1,7 +1,9 @@
+// disable and hardcode for now...
+//port    = process.env.PORT || 8443,
 var express   = require('express'),
   AlexaSkills = require('alexa-skills'),
   app     = express(),
-  port    = process.env.PORT || 3000,
+  port    = 8443,
   alexa = new AlexaSkills({
     express: app,
     route: "/",
