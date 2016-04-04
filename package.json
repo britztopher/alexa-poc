@@ -4,6 +4,7 @@
   "description": "Alexa Money Movement Proof of Concept Service",
   "main": "server.js",
   "scripts": {
+    "start": "DEBUG=express:* node server.js"
   },
   "keywords": [
     "alexa",
