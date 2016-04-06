@@ -5,20 +5,13 @@
          "slots":[]
       },
       {
-         "intent":"AMAZON.StopIntent",
-         "slots":[]
-      },
-      {
-         "intent":"AMAZON.CancelIntent",
-         "slots":[]
-      },
-      {
-         "intent":"AMAZON.NoIntent",
-         "slots":[]
-      },
-      {
-         "intent":"Hello",
-         "slots":[]
+         "intent":"Tweets",
+         "slots":[
+            {
+               "name":"Count",
+               "type":"AMAZON.NUMBER"
+            }
+        ]
       }
     ]
 }
