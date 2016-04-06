@@ -27,11 +27,11 @@ alexa.launch(function(req, res) {
 /**
  * Define an Alexa intent handler
  */
-alexa.intent('Hello', function(req, res, slots) {
+alexa.intent('Tweets', function(req, res, slots) {
  
   console.log(slots);
  
-  var phrase = 'Hello World!';
+  var phrase = 'Welcome to the Thunder Dome!!!';
   var options = {
     shouldEndSession: true,
     outputSpeech: phrase,
