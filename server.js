@@ -36,7 +36,7 @@ alexa.intent('Tweets', function(req, res, slots) {
 
   var options = {
     shouldEndSession: true,
-    card: alexa.buildCard("Card Title", this.phrase)
+    outputSpeech: this.phrase
   };
 
   tweetBot.getUserTimeline(function(err){
