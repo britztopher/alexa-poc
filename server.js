@@ -35,16 +35,15 @@ alexa.intent('Tweets', function(req, res, slots) {
   var tweetBot = new Tweetbot();
 
   var options = {
-    shouldEndSession: true,
-    outputSpeech: this.phrase
+    shouldEndSession: true
   };
 
   tweetBot.getUserTimeline(function(err){
-    options.phrase = 'got error back';
+    options.outputSpeech = 'got error back';
     alexa.send(req, res, options);
   }, function(resp){
 
-    options.phrase = 'got '+resp.length+' tweets back ' + resp[0].text;
+    options.outputSpeech = 'got '+resp.length+' tweets back ' + resp[0].text;
     alexa.send(req, res, options);
   });
 
