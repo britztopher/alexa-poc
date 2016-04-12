@@ -33,11 +33,10 @@ alexa.launch(function(req, res) {
 alexa.intent('Tweets', function(req, res, slots) {
 
   var tweetBot = new Tweetbot();
-  var phrase = 'Welcome to the Thunder Dome!!!';
 
   var options = {
     shouldEndSession: true,
-    card: alexa.buildCard("Card Title", phrase)
+    card: alexa.buildCard("Card Title", this.phrase)
   };
 
   tweetBot.getUserTimeline(function(err){
@@ -48,7 +47,7 @@ alexa.intent('Tweets', function(req, res, slots) {
     options.phrase = 'got '+resp.length+' tweets back ' + resp[0].text;
     alexa.send(req, res, options);
   });
-  
+
 });
  
 /**
