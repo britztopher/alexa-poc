@@ -16,6 +16,8 @@
   "dependencies": {
     "alexa-skill": "^0.1.1",
     "alexa-skills": "^0.1.0",
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "twitter-js-client": "0.0.5",
+    "twitter-node-client": "0.0.6"
   }
 }

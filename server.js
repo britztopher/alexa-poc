@@ -1,5 +1,6 @@
 var express   = require('express'),
   AlexaSkills = require('alexa-skills'),
+  Tweetbot = require('./twitter/api/tweetbot'),
   app     = express(),
   port    = process.env.PORT || 8081,
   alexa = new AlexaSkills({
@@ -15,6 +16,8 @@ console.log("Started listening on", port)
  */ 
 alexa.launch(function(req, res) {
   var phrase = "Welcome to my app!";
+  
+  
   var options = {
     shouldEndSession: false,
     outputSpeech: phrase,
@@ -28,17 +31,24 @@ alexa.launch(function(req, res) {
  * Define an Alexa intent handler
  */
 alexa.intent('Tweets', function(req, res, slots) {
- 
-  console.log(slots);
- 
+
+  var tweetBot = new Tweetbot();
   var phrase = 'Welcome to the Thunder Dome!!!';
+
   var options = {
     shouldEndSession: true,
-    outputSpeech: phrase,
     card: alexa.buildCard("Card Title", phrase)
   };
- 
-  alexa.send(req, res, options);
+
+  tweetBot.getUserTimeline(function(err){
+    options.phrase = 'got error back';
+    alexa.send(req, res, options);
+  }, function(resp){
+
+    options.phrase = 'got '+resp.length+' tweets back ' + resp[0].text;
+    alexa.send(req, res, options);
+  });
+  
 });
  
 /**
