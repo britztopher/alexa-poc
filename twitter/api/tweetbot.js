@@ -2,9 +2,9 @@ var Twitter = require('twitter-js-client').Twitter;
 
 //Get this data from your twitter apps dashboard
 var config = {
-  "consumerKey": "28E83KZRffGwFeT2mpaAgkzzH",
+  "consumerKey": "YxwdMDq5ky7ZNLKcijYK7r9ud",
   "consumerSecret": process.env.TWITTER_CONSUMER_SECRET || 'notTheRightOne',
-  "accessToken": process.env.TWITTER_ACCESS_KEY,
+  "accessToken": process.env.TWITTER_ACCESS_TOKEN,
   "accessTokenSecret": process.env.TWITTER_ACCESS_SECRET,
   "callBackUrl": "/auth/success"
 };
@@ -14,8 +14,12 @@ var test = function(){
 };
 
 test.prototype.getUserTimeline = function(error, success){
-  this.twitter.getUserTimeline({screen_name: 'BoyCook', count: '10'}, error, success);
+  this.twitter.getUserTimeline({screen_name: 'copperpott', count: '2'}, error,  success);
 };
+
+test.prototype.getSearch = function(err, success){
+  this.twitter.getSearch({q: 'beer'}, err, success);
+}
 //
 // twitter.getMentionsTimeline({ count: '10'}, error, success);
 //
