@@ -1,6 +1,6 @@
-var express = require('express'),
-  AlexaSkills = require('alexa-skills'),
-  Tweetbot = require('./twitter/api/tweetbot'),
+var express = require("express"),
+  AlexaSkills = require("alexa-skills"),
+  Tweetbot = require("./twitter/api/tweetbot"),
   tweetBot = new Tweetbot(),
   app = express(),
   port = process.env.PORT || 8081,
@@ -12,24 +12,11 @@ var express = require('express'),
 
 console.log("Started listening on", port)
 
-app.use('/auth/success', function(resp){
-  console.log('SUCCESS::', resp);
+app.use("/auth/success", function(resp){
+  console.log("SUCCESS::", resp);
 });
 
-// app.use('/', function(req, res){
-//
-//   var options = {
-//     shouldEndSession: true
-//   };
-//
-//   tweetBot.getUserTimeline(function(err){
-//     res.status(400).send(err);
-//   }, function(resp){
-//     res.status(200).send(resp)
-//   })
-// });
-
-app.get('/search', function(req, res){
+app.get("/search", function(req, res){
   tweetBot.getSearch(
     function(err){
     res.status(400).send(err);
@@ -38,41 +25,64 @@ app.get('/search', function(req, res){
   })
 });
 
-
 /**
  * Handles Alexa launch request
  */
 alexa.launch(function(req, res){
   var phrase = "Welcome to my app!";
-  
-  
+
   var options = {
     shouldEndSession: false,
     outputSpeech: phrase,
     reprompt: "What was that?"
   };
-  
+
   alexa.send(req, res, options);
 });
 
 /**
  * Define an Alexa intent handler
  */
-alexa.intent('Tweets', function(req, res, slots){
-  
+alexa.intent("Tweets", function(req, res, slots) {
+  var rawCount = slots.Count || 10;
+  var criteria = {
+    count: parseInt(rawCount),
+    q: slots.HashTag
+  };
+
+  if (isNaN(criteria.count)) {
+    options.outputSpeech = "Sorry boss, I didn't hear the number of tweets, could you say that again";
+    options.repromptSpeech = "could you say the number of tweets again";
+    alexa.send(req, res, options);
+    return;
+  }
+
+  if (!criteria.q) {
+    options.outputSpeech = "Sorry boss, I missed the hashtag that you're interested in, could you say that again";
+    options.repromptSpeech = "could you say the hashtag to search for again";
+    alexa.send(req, res, options);
+    return;
+  }
+
   var options = {
     shouldEndSession: true
   };
-  
-  tweetBot.getUserTimeline(function(err){
-    options.outputSpeech = 'got error back' + err;
+
+  tweetBot.getSearch(criteria, function(err){
+    options.outputSpeech = "Dagger, got an error back " + err;
     alexa.send(req, res, options);
   }, function(resp){
-    
-    options.outputSpeech = 'got ' + resp.length + ' tweets back ' + resp[0].text;
+    if(resp.length) {
+      options.outputSpeech = "Sorry boss, I couldn't find any tweets matching " + criteria.q
+    }
+    else {
+      options.outputSpeech = "Here are the top " + criteria.count + " tweets boss, "
+      resp.forEach(function(tweet) {
+        options.outputSpeech += tweet.text + ", ";
+      });
+    }
     alexa.send(req, res, options);
   });
-  
 });
 
 /**

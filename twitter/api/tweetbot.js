@@ -17,8 +17,8 @@ test.prototype.getUserTimeline = function(error, success){
   this.twitter.getUserTimeline({screen_name: 'copperpott', count: '2'}, error,  success);
 };
 
-test.prototype.getSearch = function(err, success){
-  this.twitter.getSearch({q: 'beer'}, err, success);
+test.prototype.getSearch = function(criteria, err, success){
+  this.twitter.getSearch(criteria, err, success);
 }
 //
 // twitter.getMentionsTimeline({ count: '10'}, error, success);
