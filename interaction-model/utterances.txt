@@ -1,4 +1,12 @@
-Tweets show me the top tweets
-Tweets show me the top {Count} tweets
-Tweets top tweets
-Tweets top {Count} tweets
+Tweets to show me the top {tag|HashTag} tweets
+Tweets to show me the top tweets about {tag|HashTag}
+Tweets to tell me the top tweets about {tag|HashTag}
+Tweets show me the top tweets about {tag|HashTag}
+Tweets show me the top {Count} tweets about {tag|HashTag}
+Tweets find the top tweets about {tag|HashTag}
+Tweets find the top {Count} tweets about {tag|HashTag}
+Tweets top tweets about {tag|HashTag}
+Tweets top {tag|HashTag} tweets
+Tweets the top {tag|HashTag} tweets
+Tweets top {Count} tweets about {tag|HashTag}
+Tweets top tweets about {tag|HashTag}

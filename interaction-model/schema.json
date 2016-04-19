@@ -1,17 +1,21 @@
 {
-   "intents":[
-      {
-         "intent":"AMAZON.HelpIntent",
-         "slots":[]
-      },
-      {
-         "intent":"Tweets",
-         "slots":[
-            {
-               "name":"Count",
-               "type":"AMAZON.NUMBER"
-            }
-        ]
-      }
-    ]
+  "intents":[
+     {
+        "intent":"AMAZON.HelpIntent",
+        "slots":[]
+     },
+     {
+        "intent":"Tweets",
+        "slots":[
+           {
+              "name":"Count",
+              "type":"AMAZON.NUMBER"
+           },
+           {
+             "name": "HashTag",
+             "type": "AMAZON.LITERAL"
+           }
+       ]
+     }
+   ]
 }
