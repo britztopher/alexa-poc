@@ -17,8 +17,9 @@ app.use("/auth/success", function(resp){
 });
 
 app.get("/search", function(req, res){
-  tweetBot.getSearch(
-    function(err){
+  tweetBot.getSearch({
+    q: req.query.q
+  }, function(err){
     res.status(400).send(err);
   }, function(resp){
     res.status(200).send(resp)

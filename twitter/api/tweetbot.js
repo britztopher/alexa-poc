@@ -1,4 +1,4 @@
-var Twitter = require('twitter-js-client').Twitter;
+var Twitter = require('twitter-node-client').Twitter;
 
 //Get this data from your twitter apps dashboard
 var config = {
@@ -18,6 +18,7 @@ test.prototype.getUserTimeline = function(error, success){
 };
 
 test.prototype.getSearch = function(criteria, err, success){
+  console.log("Searching for criteria ==> ", criteria);
   this.twitter.getSearch(criteria, err, success);
 }
 //
