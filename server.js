@@ -1,7 +1,7 @@
 var express = require("express"),
   AlexaSkills = require("alexa-skills"),
-  Tweetbot = require("./twitter/api/tweetbot"),
-  tweetBot = new Tweetbot(),
+  authorization = require('./auth/authorization'),
+  handlebars = require('express-handlebars'),
   passport = require('passport'),
   Strategy = require('passport-twitter').Strategy,
   app = express(),
@@ -38,73 +38,21 @@ app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUn
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-passport.use(new Strategy({
-    consumerKey: process.env.TWITTER_CONSUMER_KEY,
-    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://www.uwannarace.com/auth/twitter/callback"
-  },
-  function(token, tokenSecret, profile, cb){
-    // In this example, the user's Twitter profile is supplied as the user
-    // record.  In a production-quality application, the Twitter profile should
-    // be associated with a user record in the application's database, which
-    // allows for account linking and authentication with other identity
-    // providers.
-
-    console.log('TOKEN::', token);
-    console.log('TOKEN_SECRET::', tokenSecret);
-
-    myToken = token;
-
-    return cb(null, profile);
-  }));
+// Setup handlebars templates and static web assets folder
+app.engine('handlebars', handlebars());
+app.set('view engine', 'handlebars');
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
 
 
-// Configure Passport authenticated session persistence.
-//
-// In order to restore authentication state across HTTP requests, Passport needs
-// to serialize users into and deserialize users out of the session.  In a
-// production-quality application, this would typically be as simple as
-// supplying the user ID when serializing, and querying the user record by ID
-// from the database when deserializing.  However, due to the fact that this
-// example does not have a database, the complete Twitter profile is serialized
-// and deserialized.
-passport.serializeUser(function(user, cb){
-  cb(null, user);
-});
+// Authorization Routes for Account Linking
+app.route('/signin')
+  .get(authorization.loginForm)
+  .post(authorization.login);
 
-passport.deserializeUser(function(obj, cb){
-  cb(null, obj);
-});
+app.route('/finishoauth')
+  .post(authorization.acesssToken);
 
-app.get('/login/twitter',
-  passport.authenticate('twitter'));
-
-app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', {failureRedirect: '/login'}),
-  function(req, res){
-    console.log('REQUEST INFO FROM AUTH CALLBACK', req.query + '\n', req.body);
-    res.redirect('https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9&state='
-      +state+'&access_token='+myToken+'&token_type=Bearer');
-  });
-
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', {user: req.user});
-  });
-
-console.log("Started listening on", port)
-
-app.get("/search", function(req, res){
-  tweetBot.getSearch({
-    q: req.query.q
-  }, function(err){
-    res.status(400).send(err);
-  }, function(resp){
-    res.status(200).send(resp)
-  })
-});
 
 /**
  * Handles Alexa launch request

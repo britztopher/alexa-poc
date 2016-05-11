@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sign in with your Capital One® Credentials</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">	
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+<div class="container" >
+	
+    <div class=" ">
+        <h1 class="label-signin">Create a Personal Key?</h1>
+   </div>
+
+    <form class='form' action="finishoauth" method="post" autocomplete="off">
+        <input type='hidden' name='state' id='state' value='{{amazonState}}'  />
+        <input type='hidden' name='t' id='t' value='{{accessToken}}'  />
+        
+        <div class='error-message'>
+            {{errorMessage}}
+        </div>
+      
+       <div class='form-group'>         
+            <div >        
+                <button id="successBtn" type="submit" class="btn  btn-success" >Continue</button>
+            </div>
+       </div>         
+      
+    </form>
+	
+  
+</div>
+</body>
+</html>
