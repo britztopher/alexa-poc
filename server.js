@@ -50,7 +50,7 @@ app.use(express.static(__dirname + '/public'));
 passport.use(new Strategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://www.uwannarace.com/finishOauth"
+    callbackURL: "https://www.uwannarace.com/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, cb){
     // In this example, the user's Twitter profile is supplied as the user
@@ -100,8 +100,9 @@ app.route('/login/twitter')
   .get(passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', {failureRedirect: '/login'}),
   function(req, res){
-    console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
+    console.log('REQUEST INFO FROM AUTH CALLBACK', req.body);
 
     var accessToken = guid.generateGuid();
 
