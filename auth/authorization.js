@@ -25,7 +25,8 @@ var Authorization = {
     console.log('ACCESSTOKEN in /finishOauth::',accessToken );
     console.log('REQ in /finishOauth::', req.query);
 
-    var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#access_token=" + accessToken + "&token_type=Bearer&state=" + state;
+    var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9" +
+      "#access_token=" + accessToken + "&token_type=Bearer&state=" + req.query.state;
     console.log('REDIRECT URI:: ',  redirectUri);
     
     res.redirect(redirectUri);

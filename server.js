@@ -13,9 +13,8 @@ var express = require("express"),
     applicationId: process.env.ALEXA_APP_ID || "HelloWorld"
   });
 
-var state = '';
-
 var myToken = '';
+var state = '';
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -84,17 +83,23 @@ app.route('/signin')
   .post(authorization.login);
 
 app.route('/finishoauth')
-  .post(authorization.acesssToken);
+  .post(authorization.acesssToken)
   .get(authorization.acesssToken);
 
+app.route('/login')
+  .get(function(req, res){
+  state = req.query.state;
+
+  res.redirect('/login/twitter');
+});
 app.route('/login/twitter')
-  .get(passport.authenticate('twitter'), function(req, res){console.log('REQ:::', req.query)});
+  .get(passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', {failureRedirect: '/login'}),
   function(req, res){
     console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
-    res.redirect('/finishoauth');
+    res.redirect('/finishoauth?state='+state);
   });
 /**
  * Handles Alexa launch request
