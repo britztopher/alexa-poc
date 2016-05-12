@@ -1,6 +1,6 @@
 var express = require("express"),
   AlexaSkills = require("alexa-skills"),
-  guid = require('./guid'),
+  guid = require('./auth/guid'),
   authorization = require('./auth/authorization'),
   handlebars = require('express-handlebars'),
   passport = require('passport'),
@@ -99,12 +99,12 @@ app.get('/auth/twitter/callback',
   function(req, res){
     console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
 
-    var redirectUrl= 'https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#state='
-      +state+'&access_token='+guid.generateGuid()+'&token_type=Bearer';
+    var accessToken = guid.generateGuid();
 
-    console.log('redirectURL::', redirectUrl);
+    var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#access_token=" + accessToken + "&token_type=Bearer&state=" + state;
+    console.log('redirectURL::', redirectUri);
 
-    res.redirect(redirectUrl);
+    res.redirect(redirectUri);
   });
 /**
  * Handles Alexa launch request
