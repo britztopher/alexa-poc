@@ -8,10 +8,11 @@ var Authorization = {
     state = req.query.state;
     
     res.render('login', {amazonState: state});
+
   },
   
   login: function(req, res){
-    
+
     console.log('reqBODY', req.body);
     var authToken = guid.generateGuid();
 
@@ -19,7 +20,9 @@ var Authorization = {
   },
 
   acesssToken: function(req, res){
-    var accessToken = req.body.t;
+    var accessToken = req.body.t ||guid.generateGuid();
+    
+    console.log('ACCESSTOKEN in /finishOauth::',accessToken );
     
     var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#access_token=" + accessToken + "&token_type=Bearer&state=" + state;
     console.log('REDIRECT URL:: ',  redirectUri);
@@ -27,6 +30,5 @@ var Authorization = {
     res.redirect(redirectUri);
   }
 };
-
 
 module.exports = Authorization;

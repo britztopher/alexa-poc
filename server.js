@@ -46,18 +46,11 @@ app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 
 
-// Authorization Routes for Account Linking
-app.route('/signin')
-  .get(authorization.loginForm)
-  .post(authorization.login);
-
-app.route('/finishoauth')
-  .post(authorization.acesssToken);
 
 passport.use(new Strategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://www.uwannarace.com/auth/twitter/callback"
+    callbackURL: "https://www.uwannarace.com/finishOauth"
   },
   function(token, tokenSecret, profile, cb){
     // In this example, the user's Twitter profile is supplied as the user
@@ -83,19 +76,30 @@ passport.use(new Strategy({
 // from the database when deserializing.  However, due to the fact that this
 // example does not have a database, the complete Twitter profile is serialized
 // and deserialized.
-passport.serializeUser(function(user, cb){
-  cb(null, user);
+passport.serializeUser(function(profile, cb){
+
+  console.log('Serialized USER::', profile );
+  cb(null, profile);
 });
 
 passport.deserializeUser(function(obj, cb){
+
+  console.log('DESerialized USER::', obj);
   cb(null, obj);
 });
 
-app.get('/login/twitter',
-  passport.authenticate('twitter'));
+// Authorization Routes for Account Linking
+app.route('/signin')
+  .get(authorization.loginForm)
+  .post(authorization.login);
+
+app.route('/finishoauth')
+  .post(authorization.acesssToken);
+
+app.route('/login/twitter')
+  .get(passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', {failureRedirect: '/login'}),
   function(req, res){
     console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
 
