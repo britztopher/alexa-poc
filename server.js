@@ -1,5 +1,6 @@
 var express = require("express"),
   AlexaSkills = require("alexa-skills"),
+  guid = require('./guid'),
   authorization = require('./auth/authorization'),
   handlebars = require('express-handlebars'),
   passport = require('passport'),
@@ -53,7 +54,58 @@ app.route('/signin')
 app.route('/finishoauth')
   .post(authorization.acesssToken);
 
+passport.use(new Strategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: "https://www.uwannarace.com/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, cb){
+    // In this example, the user's Twitter profile is supplied as the user
+    // record.  In a production-quality application, the Twitter profile should
+    // be associated with a user record in the application's database, which
+    // allows for account linking and authentication with other identity
+    // providers.
 
+    console.log('TOKEN_SECRET::', tokenSecret);
+
+    myToken = token;
+
+    return cb(null, profile);
+  }));
+
+
+// Configure Passport authenticated session persistence.
+//
+// In order to restore authentication state across HTTP requests, Passport needs
+// to serialize users into and deserialize users out of the session.  In a
+// production-quality application, this would typically be as simple as
+// supplying the user ID when serializing, and querying the user record by ID
+// from the database when deserializing.  However, due to the fact that this
+// example does not have a database, the complete Twitter profile is serialized
+// and deserialized.
+passport.serializeUser(function(user, cb){
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb){
+  cb(null, obj);
+});
+
+app.get('/login/twitter',
+  passport.authenticate('twitter'));
+
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', {failureRedirect: '/login'}),
+  function(req, res){
+    console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
+
+    var redirectUrl= 'https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#state='
+      +state+'&access_token='+guid.generateGuid()+'&token_type=Bearer';
+
+    console.log('redirectURL::', redirectUrl);
+
+    res.redirect(redirectUrl);
+  });
 /**
  * Handles Alexa launch request
  */

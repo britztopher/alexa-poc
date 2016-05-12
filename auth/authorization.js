@@ -21,7 +21,9 @@ var Authorization = {
   acesssToken: function(req, res){
     var accessToken = req.body.t;
     
-    var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#access_token=" + accessToken + "&token_type=Bearer&state=" + req.body.state;
+    var redirectUri = "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M28J2SR508CPU9#access_token=" + accessToken + "&token_type=Bearer&state=" + state;
+    console.log('REDIRECT URL:: ',  redirectUri);
+    
     res.redirect(redirectUri);
   }
 };
