@@ -85,6 +85,7 @@ app.route('/signin')
 
 app.route('/finishoauth')
   .post(authorization.acesssToken);
+  .get(authorization.acesssToken);
 
 app.route('/login/twitter')
   .get(passport.authenticate('twitter'), function(req, res){console.log('REQ:::', req.query)});
