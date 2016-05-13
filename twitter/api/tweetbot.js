@@ -5,7 +5,7 @@ var config = {
   "consumerKey": "YxwdMDq5ky7ZNLKcijYK7r9ud",
   "consumerSecret": process.env.TWITTER_CONSUMER_SECRET || 'notTheRightOne',
   // "accessToken": process.env.TWITTER_ACCESS_TOKEN,
-  // "accessTokenSecret": process.env.TWITTER_ACCESS_SECRET
+  "accessTokenSecret": process.env.TWITTER_ACCESS_SECRET
 };
 
 var test = function(userAccessToken){

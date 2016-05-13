@@ -6,6 +6,7 @@ var TwitterAuth = function(app){
   this.app = app;
 
   var myToken = '';
+  var myTokenSecret= '';
   var state = '';
 
   // Initialize Passport and restore authentication state, if any, from the
@@ -26,6 +27,7 @@ passport.use(new Strategy({
     // providers.
     
     myToken = token;
+    myTokenSecret = tokenSecret;
     return cb(null, profile);
   }));
   

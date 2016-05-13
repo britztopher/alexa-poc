@@ -27,7 +27,7 @@ app.engine('handlebars', handlebars());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
-   
+
 var twitterAuth = new TwitterAuth(app);
 
 app.route('/awsRedirect')
@@ -100,23 +100,22 @@ alexa.intent("TimeLine", function(req, res, slots){
   var accessToken = req.body.session.user.accessToken;
   var tweetBot = new Tweetbot(accessToken);
 
+  console.log('ACCESS TOKEN::', accessToken);
   var options = {
     shouldEndSession: true
   };
 
   tweetBot.getHomeTimeline(function(err){
     options.outputSpeech = "Dagger, got an error back " + err;
+    console.log('CANNOT GET HOME TIMELINE BC::', err);
     alexa.send(req, res, options);
   }, function(resp){
-    if(resp.length){
-      options.outputSpeech = "Sorry boss, I couldn't find any tweets matching " + criteria.q
-    }
-    else{
-      options.outputSpeech = "Here are your last 10 tweets on your timeline boss cheif";
-      resp.forEach(function(tweet){
-        options.outputSpeech += tweet.text + ", ";
-      });
-    }
+
+    options.outputSpeech = "Here are your last 10 tweets on your timeline boss cheif";
+    resp.forEach(function(tweet){
+      options.outputSpeech += tweet.text + ", ";
+    });
+    
     alexa.send(req, res, options);
   });
 
