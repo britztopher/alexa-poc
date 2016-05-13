@@ -105,17 +105,23 @@ alexa.intent("TimeLine", function(req, res, slots){
     shouldEndSession: true
   };
 
-  tweetBot.getHomeTimeline(function(err){
+  tweetBot.getUserTimeline(function(err){
     options.outputSpeech = "Dagger, got an error back " + err;
-    console.log('CANNOT GET HOME TIMELINE BC::', err);
+    console.log('CANNOT GET HOME TIMELINE BC::', err );
     alexa.send(req, res, options);
   }, function(resp){
+    console.log('RESPONSE: ', resp);
+    if(resp.length===0){
+      options.outputSpeech = "Sorry boss, I couldn't find any tweets on your home time line"
+    }
+    else{
+      options.outputSpeech = "Here are your last 10 tweets on your time line boss.  ";
+      var parsedResp = JSON.parse(resp);
 
-    options.outputSpeech = "Here are your last 10 tweets on your timeline boss cheif";
-    resp.forEach(function(tweet){
-      options.outputSpeech += tweet.text + ", ";
-    });
-    
+      parsedResp.forEach(function(tweet){
+        options.outputSpeech += tweet.text + ", ";
+      });
+    }
     alexa.send(req, res, options);
   });
 
