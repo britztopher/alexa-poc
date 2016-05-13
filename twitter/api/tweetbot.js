@@ -23,9 +23,13 @@ test.prototype.getSearch = function(criteria, err, success){
   this.twitter.getSearch(criteria, err, success);
 };
 
-test.prototype.getUserTimeline = function(error, success){
-  this.twitter.getHomeTimeline({ count: '10'}, error, success);
+test.prototype.getHomeTimeline = function(criteria, err, success){
+  this.twitter.getHomeTimeline({ count: '10'}, err, success);
 };
+
+function error(err){
+  console.log('Error in TweetBot::', err);
+}
 
 
 

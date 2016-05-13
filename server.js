@@ -59,6 +59,7 @@ alexa.launch(function(req, res){
  */
 alexa.intent("Tweets", function(req, res, slots){
   var rawCount = slots.Count || 10;
+  var options = {};
   var criteria = {
     count: parseInt(rawCount),
     q: slots.HashTag
@@ -105,7 +106,21 @@ alexa.intent("TimeLine", function(req, res, slots){
   var accessToken = req.body.session.user.accessToken;
   var tweetBot = new Tweetbot(accessToken);
 
-  tweetBot.getUserTimeline(accessToken);
+  tweetBot.getHomeTimeline(criteria, function(err){
+    options.outputSpeech = "Dagger, got an error back " + err;
+    alexa.send(req, res, options);
+  }, function(resp){
+    if(resp.length){
+      options.outputSpeech = "Sorry boss, I couldn't find any tweets matching " + criteria.q
+    }
+    else{
+      options.outputSpeech = "Here are your last 10 tweets on your timeline boss cheif";
+      resp.forEach(function(tweet){
+        options.outputSpeech += tweet.text + ", ";
+      });
+    }
+    alexa.send(req, res, options);
+  });
 
 });
 

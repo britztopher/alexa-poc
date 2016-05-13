@@ -52,7 +52,6 @@ passport.use(new Strategy({
     function(req, res){
       res.redirect('/awsRedirect?state='+state+'&access_token='+myToken);
     });
-  
 };
 
 
