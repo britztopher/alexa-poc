@@ -4,12 +4,13 @@ var Twitter = require('twitter-node-client').Twitter;
 var config = {
   "consumerKey": "YxwdMDq5ky7ZNLKcijYK7r9ud",
   "consumerSecret": process.env.TWITTER_CONSUMER_SECRET || 'notTheRightOne',
-  "accessToken": process.env.TWITTER_ACCESS_TOKEN,
-  "accessTokenSecret": process.env.TWITTER_ACCESS_SECRET,
-  "callBackUrl": "/auth/success"
+  // "accessToken": process.env.TWITTER_ACCESS_TOKEN,
+  // "accessTokenSecret": process.env.TWITTER_ACCESS_SECRET
 };
 
-var test = function(){
+var test = function(userAccessToken){
+
+  config.accessToken = userAccessToken;
   this.twitter = new Twitter(config);
 };
 
@@ -20,12 +21,17 @@ test.prototype.getUserTimeline = function(error, success){
 test.prototype.getSearch = function(criteria, err, success){
   console.log("Searching for criteria ==> ", criteria);
   this.twitter.getSearch(criteria, err, success);
-}
+};
+
+test.prototype.getUserTimeline = function(error, success){
+  this.twitter.getHomeTimeline({ count: '10'}, error, success);
+};
+
+
+
 //
 // twitter.getMentionsTimeline({ count: '10'}, error, success);
-//
-// twitter.getHomeTimeline({ count: '10'}, error, success);
-//
+
 // twitter.getReTweetsOfMe({ count: '10'}, error, success);
 //
 // twitter.getTweet({ id: '1111111111'}, error, success);

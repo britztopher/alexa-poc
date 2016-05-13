@@ -1,10 +1,9 @@
 var express = require("express"),
   AlexaSkills = require("alexa-skills"),
-  guid = require('./auth/guid'),
   authorization = require('./auth/authorization'),
   handlebars = require('express-handlebars'),
-  passport = require('passport'),
-  Strategy = require('passport-twitter').Strategy,
+  TwitterAuth = require('./auth/twitterAuth'),
+  Tweetbot = require('./twitter/api/tweetbot'),
   app = express(),
   port = process.env.PORT || 8081,
   alexa = new AlexaSkills({
@@ -13,7 +12,6 @@ var express = require("express"),
     applicationId: process.env.ALEXA_APP_ID || "HelloWorld"
   });
 
-var myToken = '';
 var state = '';
 
 // Use application-level middleware for common functionality, including
@@ -23,89 +21,29 @@ app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({extended: true}));
 app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true}));
 
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Setup handlebars templates and static web assets folder
 app.engine('handlebars', handlebars());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
+   
+var twitterAuth = new TwitterAuth(app);
 
-
-
-passport.use(new Strategy({
-    consumerKey: process.env.TWITTER_CONSUMER_KEY,
-    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://www.uwannarace.com/auth/twitter/callback"
-  },
-  function(token, tokenSecret, profile, cb){
-    // In this example, the user's Twitter profile is supplied as the user
-    // record.  In a production-quality application, the Twitter profile should
-    // be associated with a user record in the application's database, which
-    // allows for account linking and authentication with other identity
-    // providers.
-
-    console.log('TOKEN_SECRET::', tokenSecret);
-
-    myToken = token;
-
-    return cb(null, profile);
-  }));
-
-
-// Configure Passport authenticated session persistence.
-//
-// In order to restore authentication state across HTTP requests, Passport needs
-// to serialize users into and deserialize users out of the session.  In a
-// production-quality application, this would typically be as simple as
-// supplying the user ID when serializing, and querying the user record by ID
-// from the database when deserializing.  However, due to the fact that this
-// example does not have a database, the complete Twitter profile is serialized
-// and deserialized.
-passport.serializeUser(function(profile, cb){
-
-  console.log('Serialized USER::', profile );
-  cb(null, profile);
-});
-
-passport.deserializeUser(function(obj, cb){
-
-  console.log('DESerialized USER::', obj);
-  cb(null, obj);
-});
-
-// Authorization Routes for Account Linking
-app.route('/signin')
-  .get(authorization.loginForm)
-  .post(authorization.login);
-
-app.route('/finishoauth')
-  .post(authorization.acesssToken)
-  .get(authorization.acesssToken);
+app.route('/awsRedirect')
+  .get(authorization.awsRedirect);
 
 app.route('/login')
   .get(function(req, res){
-  state = req.query.state;
+    state = req.query.state;
 
-  res.redirect('/login/twitter');
-});
-app.route('/login/twitter')
-  .get(passport.authenticate('twitter'));
-
-app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', {failureRedirect: '/login'}),
-  function(req, res){
-    console.log('REQUEST INFO FROM AUTH CALLBACK', req.query);
-    res.redirect('/finishoauth?state='+state);
+    res.redirect('/login/twitter');
   });
+
 /**
  * Handles Alexa launch request
  */
 alexa.launch(function(req, res){
-  var phrase = "Welcome to my app!";
+  var phrase = "What would you like Tweetbot to do?";
 
   var options = {
     shouldEndSession: false,
@@ -160,6 +98,17 @@ alexa.intent("Tweets", function(req, res, slots){
     alexa.send(req, res, options);
   });
 });
+
+alexa.intent("TimeLine", function(req, res, slots){
+
+  
+  var accessToken = req.session.user.accessToken;
+  var tweetBot = new Tweetbot(accessToken);
+
+  tweetBot.getUserTimeline(accessToken);
+
+});
+
 
 /**
  * Handles Alexa session termination requests

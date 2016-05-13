@@ -19,8 +19,8 @@ var Authorization = {
     res.render('accessToken', {amazonState: req.query.state, accessToken: authToken})
   },
 
-  acesssToken: function(req, res){
-    var accessToken = req.body.t || guid.generateGuid();
+  awsRedirect: function(req, res){
+    var accessToken = req.query.access_token;
     
     console.log('ACCESSTOKEN in /finishOauth::',accessToken );
     console.log('REQ in /finishOauth::', req.query);
