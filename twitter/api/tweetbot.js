@@ -23,7 +23,7 @@ test.prototype.getSearch = function(criteria, err, success){
   this.twitter.getSearch(criteria, err, success);
 };
 
-test.prototype.getHomeTimeline = function(criteria, err, success){
+test.prototype.getHomeTimeline = function(err, success){
   this.twitter.getHomeTimeline({ count: '10'}, err, success);
 };
 

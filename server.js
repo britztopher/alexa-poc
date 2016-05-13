@@ -106,7 +106,7 @@ alexa.intent("TimeLine", function(req, res, slots){
   var accessToken = req.body.session.user.accessToken;
   var tweetBot = new Tweetbot(accessToken);
 
-  tweetBot.getHomeTimeline(criteria, function(err){
+  tweetBot.getHomeTimeline(function(err){
     options.outputSpeech = "Dagger, got an error back " + err;
     alexa.send(req, res, options);
   }, function(resp){
