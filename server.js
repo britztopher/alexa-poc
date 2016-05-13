@@ -102,7 +102,7 @@ alexa.intent("Tweets", function(req, res, slots){
 alexa.intent("TimeLine", function(req, res, slots){
 
   
-  var accessToken = req.session.user.accessToken;
+  var accessToken = req.body.session.user.accessToken;
   var tweetBot = new Tweetbot(accessToken);
 
   tweetBot.getUserTimeline(accessToken);
