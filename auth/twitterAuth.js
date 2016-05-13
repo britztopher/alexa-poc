@@ -46,12 +46,6 @@ passport.use(new Strategy({
 
   app.route('/login/twitter')
     .get(passport.authenticate('twitter'));
- 
-  app.get('/auth/twitter/callback',
-    passport.authenticate('twitter', {failureRedirect: '/login'}),
-    function(req, res){
-      res.redirect('/awsRedirect?state='+state+'&access_token='+myToken);
-    });
 };
 
 

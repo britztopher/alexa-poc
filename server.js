@@ -39,6 +39,12 @@ app.route('/login')
     res.redirect('/login/twitter');
   });
 
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', {failureRedirect: '/login'}),
+  function(req, res){
+    res.redirect('/awsRedirect?state='+state+'&access_token='+myToken);
+  });
+
 /**
  * Handles Alexa launch request
  */
@@ -105,6 +111,10 @@ alexa.intent("TimeLine", function(req, res, slots){
   
   var accessToken = req.body.session.user.accessToken;
   var tweetBot = new Tweetbot(accessToken);
+
+  var options = {
+    shouldEndSession: true
+  };
 
   tweetBot.getHomeTimeline(function(err){
     options.outputSpeech = "Dagger, got an error back " + err;
