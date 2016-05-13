@@ -1,4 +1,5 @@
 var express = require("express"),
+  passport = require('passport'),
   AlexaSkills = require("alexa-skills"),
   authorization = require('./auth/authorization'),
   handlebars = require('express-handlebars'),
@@ -31,19 +32,6 @@ var twitterAuth = new TwitterAuth(app);
 
 app.route('/awsRedirect')
   .get(authorization.awsRedirect);
-
-app.route('/login')
-  .get(function(req, res){
-    state = req.query.state;
-
-    res.redirect('/login/twitter');
-  });
-
-app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', {failureRedirect: '/login'}),
-  function(req, res){
-    res.redirect('/awsRedirect?state='+state+'&access_token='+myToken);
-  });
 
 /**
  * Handles Alexa launch request

@@ -6,6 +6,8 @@ var TwitterAuth = function(app){
   this.app = app;
 
   var myToken = '';
+  var state = '';
+
   // Initialize Passport and restore authentication state, if any, from the
   // session.
   app.use(passport.initialize());
@@ -14,7 +16,7 @@ var TwitterAuth = function(app){
 passport.use(new Strategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-   callbackURL: "http://127.0.0.1:18081/auth/twitter/callback"
+   callbackURL: "http://www.uwannarace.com/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, cb){
     // In this example, the user's Twitter profile is supplied as the user
@@ -46,6 +48,18 @@ passport.use(new Strategy({
 
   app.route('/login/twitter')
     .get(passport.authenticate('twitter'));
+  app.route('/login')
+    .get(function(req, res){
+      state = req.query.state;
+      
+      res.redirect('/login/twitter');
+    });
+  
+  app.get('/auth/twitter/callback',
+    passport.authenticate('twitter', {failureRedirect: '/login'}),
+    function(req, res){
+      res.redirect('/awsRedirect?state='+state+'&access_token='+myToken);
+    });
 };
 
 
